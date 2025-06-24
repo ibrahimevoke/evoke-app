@@ -1,0 +1,30 @@
+<h4>{{title}}</h4>
+<h3>UserName: {{username}}</h3>
+<h3>Update UserName : <input type="text" [(ngModel)]="username"/></h3>
+<h3>Customer Details</h3>
+<li *ngFor="let item of customers let idx=index trackBy:trackByID" class="customer-item"
+
+(click)="onItemClick(item)"
+> {{idx+1}}
+ {{item.id}} - {{item.name}} - {{item.city}} -- {{item.age}}
+  <button (click)="deleteCustomer(item)">Delete</button>
+
+</li>
+
+<div *ngIf="clicked; then show else warn"  ></div>
+
+<ng-template #show >
+    <div class="bg-success text-white p-2">
+  You have Selected : <input type="text" [(ngModel)]="clickedItem.name" />
+    and 
+    <input type="text" [(ngModel)]="clickedItem.city" />
+    </div>
+  
+
+</ng-template>
+
+<ng-template #warn>
+    <h3 class="bg-danger  text-white p-2">Click on any item to see details</h3>
+
+</ng-template>
+ <app-customer></app-customer>
