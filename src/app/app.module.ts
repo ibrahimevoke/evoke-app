@@ -6,6 +6,7 @@ import { AppComponent,MyAappComponentt } from './app.component';
 import { BindingComponent } from './../binding/binding.component';
 import { FormsModule } from '@angular/forms';
 import { CustomerModule } from 'src/di/customer.module';
+import { DataflowModule } from 'src/intercomp/dataflow.module';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { CustomerModule } from 'src/di/customer.module';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    CustomerModule  
+    CustomerModule,
+    DataflowModule 
   ],
   providers: [],
   bootstrap: [AppComponent]
