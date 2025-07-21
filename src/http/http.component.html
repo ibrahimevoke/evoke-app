@@ -1,0 +1,18 @@
+<h3 class="bg-warning text-white p-2">
+    Angular Full Stack Demo
+</h3>
+<h4>Food Items</h4>
+<div class="container">
+    <ul class="list-group">
+        <label for="">List of Foods</label>
+        <li *ngFor="let food of food" tracjkBy:trackByID>
+            <input type="text" name="food-name" [(ngModel)]="food_name">
+            <button (click)="updateFood(food)">Update</button>
+            <button (click)="deleteFoods(food)">Delete</button>
+        </li>
+    </ul>
+
+    <h5>Add new food Item</h5>
+    <input type="text" name="food-name" [(ngModel)]="food_name">
+    <button (click)="createFood({name:food_name})">Add</button>
+</div>
