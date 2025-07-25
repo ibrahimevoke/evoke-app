@@ -3,16 +3,69 @@
 </h3>
 <h4>Food Items</h4>
 <div class="container">
-    <ul class="list-group">
-        <label for="">List of Foods</label>
-        <li *ngFor="let food of food" tracjkBy:trackByID>
-            <input type="text" name="food-name" [(ngModel)]="food_name">
-            <button (click)="updateFood(food)">Update</button>
-            <button (click)="deleteFoods(food)">Delete</button>
-        </li>
-    </ul>
+    <div class="mb-4">
+        <h5>List of Foods</h5>
+        <ul class="list-group">
+            <li *ngFor="let food of food; trackBy: trackByFoodId"
+                class="list-group-item d-flex justify-content-between align-items-center">
+                <div class="flex-grow-1">
+                    <!-- Display mode -->
+                    <span *ngIf="editingFood?.id !== food.id" class="food-name">
+                        <strong>{{ food.name }}</strong>
+                        <small class="text-muted" *ngIf="food.price">(${{ food.price }})</small>
+                    </span>
 
-    <h5>Add new food Item</h5>
-    <input type="text" name="food-name" [(ngModel)]="food_name">
-    <button (click)="createFood({name:food_name})">Add</button>
+                    <!-- Edit mode -->
+                    <div *ngIf="editingFood?.id === food.id" class="edit-form">
+                        <input type="text" class="form-control mb-2" [(ngModel)]="editingFood.name"
+                            placeholder="Food name">
+                        <input type="number" class="form-control" [(ngModel)]="editingFood.price"
+                            placeholder="Price (optional)" step="0.01">
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <!-- Normal mode buttons -->
+                    <ng-container *ngIf="editingFood?.id !== food.id">
+                        <button class="btn btn-sm btn-outline-primary" (click)="startEdit(food)">
+                            Edit
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" (click)="deleteFoods(food)">
+                            Delete
+                        </button>
+                    </ng-container>
+
+                    <!-- Edit mode buttons -->
+                    <ng-container *ngIf="editingFood?.id === food.id">
+                        <button class="btn btn-sm btn-success" (click)="updateFood(editingFood)">
+                            Save
+                        </button>
+                        <button class="btn btn-sm btn-secondary" (click)="cancelEdit()">
+                            Cancel
+                        </button>
+                    </ng-container>
+                </div>
+            </li>
+            <li *ngIf="food?.length === 0" class="list-group-item text-center text-muted">
+                No food items found
+            </li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Add New Food Item</h5>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" name="food-name" [(ngModel)]="food_name"
+                    placeholder="Enter food name">
+
+                <input type="text" class="form-control" name="food-name" [(ngModel)]="food_price"
+                    placeholder="Enter food Price">
+
+                <button class="btn btn-primary" type="button" (click)="createFood()" [disabled]="!food_name.trim()">
+                    Add Food
+                </button>
+            </div>
+        </div>
+    </div>
 </div>

@@ -29,6 +29,24 @@ app.get('/', (req, res) => {
     res.json("Welcome to the REST API!");
 });  
 
+// Add this DELETE endpoint for foods
+app.delete('/api/foods/:id', (req, res) => {
+    try {
+        const foodId = parseInt(req.params.id);
+        const index = foods.findIndex(f => f.id === foodId);
+        
+        if (index !== -1) {
+            const deletedFood = foods.splice(index, 1)[0];
+            res.json({ message: 'Food deleted successfully', food: deletedFood });
+        } else {
+            res.status(404).json({ error: 'Food not found' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
 app.use(express.static(__dirname));
 
 let corsOptions={
@@ -108,14 +126,22 @@ app.put('/api/books/:id', (req, res) => {
     }
 });
 app.delete('/api/books/:id', (req, res) => {
+        try {
     const bookId = parseInt(req.params.id);
     const index = books.findIndex(b => b.id === bookId);
     if (index !== -1) {
-        books.splice(index, 1);
-        res.status(204).send();
+        const deletedFood = books.splice(index, 1);
+                    res.json({ message: 'Food deleted successfully', food: deletedFood });
+
+        // res.status(204).send();
     } else {
         res.status(404).json({ message: 'Book not found' });
     }
+}
+catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+}
 });
 
 

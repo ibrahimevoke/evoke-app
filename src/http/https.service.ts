@@ -1,65 +1,71 @@
-// serive=> REST api using HttpClient - CRUD operations with Observables
-
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { json } from 'body-parser';
-import { debounceTime, filter, map, Observable } from 'rxjs';
+import { Observable, map, catchError, throwError } from 'rxjs';
 
-const jwt_tokeen = 'asdasdas3erewgrjtfgdwsdsa';
+const jwt_token = 'asdasdas3erewgrjtfgdwsdsa';
 
-const httpOptions: any = {
+const httpOptions = {
   headers: new HttpHeaders({
-    jwt: jwt_tokeen,
+    jwt: jwt_token,
     'Content-Type': 'application/json',
   }),
 };
+
 @Injectable({
   providedIn: 'root',
 })
 export class HttpsService {
   constructor(private http: HttpClient) {}
 
-  baseUrl = 'https://localhost:3000';
+  baseUrl = 'http://localhost:3000'; // Changed from https to http
 
-  getFoods(): any {
-    return this.http
-      .get(this.baseUrl + '/api/foods')
-      .pipe(debounceTime(2000))
-      .pipe(filter((response) => response !== null && response !== undefined))
-      .pipe(
-        map((response: any) => {
-          console.log('Response from getFoods:', response);
-          return response;
-        })
-      );
+  getFoods(): Observable<any> {
+    return this.http.get(this.baseUrl + '/api/foods').pipe(
+      map((response: any) => {
+        console.log('Response from getFoods:', response);
+        return response;
+      }),
+      catchError(this.handleError)
+    );
   }
 
-  //postFood(food: any): Observable<any> {
   addFood(food: any): Observable<any> {
     let body = JSON.stringify(food);
     return this.http.post(this.baseUrl + '/api/foods', body, httpOptions).pipe(
       map((response: any) => {
         console.log('Response from addFood:', response);
         return response;
-      })
+      }),
+      catchError(this.handleError)
     );
   }
 
-  //updateFood(food: any): Observable<any> {
   updateFood(food: any): Observable<any> {
-    let body = JSON.stringify(food);
-    return this.http.put(
-      this.baseUrl + '/api/foods/' + food.id,
-      body,
-      httpOptions
-    );
+    return this.http
+      .put(this.baseUrl + '/api/foods/' + food.id, food, httpOptions)
+      .pipe(
+        map((response: any) => {
+          console.log('Response from updateFood:', response);
+          return response;
+        }),
+        catchError(this.handleError)
+      );
   }
-  deleteFoods(id: number): Observable<any> {
-    let body = JSON.stringify(id);
-    return this.http.delete(this.baseUrl + '/api/foods/' + id);
+
+  deleteFoods(food: number): Observable<any> {
+    return this.http
+      .delete(this.baseUrl + '/api/foods/' + food, httpOptions)
+      .pipe(
+        map((response: any) => {
+          console.log('Response from deleteFoods:', response);
+          return response;
+        }),
+        catchError(this.handleError)
+      );
   }
-  // deleteFoods(food: any): <Observable<any> {
-  //   let body=JSON.stringify(food);
-  //   return this.http.delete(this.baseUrl+'/api/foods/'+food.id, body, httpOptions)
-  // }
+
+  private handleError(error: any) {
+    console.error('HTTP Error:', error);
+    return throwError(() => error);
+  }
 }
